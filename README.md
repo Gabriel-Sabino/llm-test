@@ -1,4 +1,4 @@
-# Hackathon Starter - Node & OpenAI
+# Node & OpenAI
 
 1. Create new `.env` file from `.env.sample` and add env the openAI key
 2. Run `npm i` to install dependencies

@@ -1,4 +1,5 @@
 import { storeProducts } from "./store";
+import { PAYMENT_MAP, addressMap, productEmojis } from "./constants";
 
 // Função para remover acentos
 export function removeAccents(str: string): string {
@@ -9,7 +10,7 @@ export function removeAccents(str: string): string {
 export function simplifyText(str: string): string {
     return removeAccents(str)
         .toLowerCase()
-        .replace(/\b(de|do|da|e|com|para|por|a|o|as|os)\b/g, '')
+        .replace(/\b(para|por|a|o|as|os)\b/g, '')
         .replace(/\s+/g, ' ')
         .trim();
 }
@@ -23,44 +24,9 @@ export function generateProductNormalizationExamples(names: string[]): string {
     return examples.join('\n');
 }
 
-// Mapeamento de formas de pagamento
-export const paymentMap = {
-    'dinheiro': 'money',
-    'dinnheiro': 'money',
-    'debito': 'debit',
-    'crédito': 'credit',
-    'credito': 'credit',
-    'pix': 'pix',
-    'vr': 'VR',
-    'va': 'VA'
-};
-
-// Mapeamento de regras de normalização de endereços
-export const addressMap = {
-    'Av.': 'Avenida',
-    'Av': 'Avenida',
-    'R.': 'Rua',
-    'R': 'Rua',
-    'bairro': '',
-    'número': '',
-    'num': '',
-    'n.': ''
-};
-
-// Exemplos de números por extenso
-export const numberExamples = [
-    '* "dez" -> 10',
-    '* "cinquenta e cinco" -> 55',
-    '* "cento e vinte" -> 120',
-    '* "quinhentos" -> 500',
-    '* "setenta e sete" -> 77',
-    '* "doze" -> 12',
-    '* "novecentos e noventa e nove" -> 999'
-].join('\n');
-
 // Gera instruções de normalização de pagamento
 export function generatePaymentInstructions(): string {
-    return Object.entries(paymentMap)
+    return Object.entries(PAYMENT_MAP)
         .map(([k, v]) => `"${k}" -> "${v}"`)
         .join('\n');
 }
@@ -77,4 +43,11 @@ export function generateMenuList(): string {
     return storeProducts
         .map(p => `- ${p.name}`)
         .join('\n');
+}
+
+export function getProductEmoji(productName: string): string {
+    for (const [key, emoji] of Object.entries(productEmojis)) {
+        if (productName.includes(key)) return emoji;
+    }
+    return '🍽️'; // Emoji padrão para produtos não mapeados
 } 
